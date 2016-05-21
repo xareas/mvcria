@@ -1,0 +1,196 @@
+﻿@using System.Data.SqlClient
+@model IEnumerable<TutorialMVC70486.Models.Estudiante>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<ul class="breadcrumb">
+    <li><a href="#">Inicio</a></li>
+    <li class="active">Estudiantes</li>
+</ul>
+
+<div class="panel panel-primary" id="panel01">
+    <div class="panel-heading">
+        <h4 class="panel-title">Estudiantes</h4>
+    </div>
+    <div class="panel-body">
+        Por favor seleccione al estudiante que desea realizar cambios, luego de clic en boton de editar o borrar.
+        o bien el boton de acciones de la fila para realizar algunar operacion sobre el registro.
+    </div>
+
+    <div class="panel-footer">
+        <div class="btn-group btn-group-sm">
+            <a href='@Url.Action("Create")' class="btn btn-default js-new">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo Estudiante
+            </a>
+          
+            <!--primer dropdown de acciones-->
+            <div class="btn-group btn-group-sm">
+                <button type="button" id="actionmenurow" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Acciones Registro <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Primera Accion</a></li>
+                    <li><a href="#">Segunda Accion</a></li>
+                    <li><a href="#">Tercera Accion</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Procesar Informacion en WebWoker</a></li>
+                </ul>
+            </div> <!--fin del primer dropdown de acciones-->
+
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Acciones <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Primera Accion</a></li>
+                    <li><a href="#">Segunda Accion</a></li>
+                    <li><a href="#">Tercera Accion</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Procesar Informacion en WebWoker</a></li>
+                </ul>
+            </div>
+        </div>
+        @using (Html.BeginForm("Index", "Estudiante", FormMethod.Post, new { role = "form", @class = "form-inline pull-right" }))
+        {
+            <div class="form-group form-group-sm">
+                @Html.Label("Nombre", htmlAttributes: new { @class = "control-label" })
+                @Html.TextBox("filter", null, new { @class = "form-control" })
+            </div>
+            <input type="submit" value="Buscar" class="btn btn-default" />
+
+        }
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed  table-responsive" id="jkgrid">
+        <thead class="">
+            <tr class="bg-primary">
+                <th class="col-md-1 col-xs-1">Acciones</th>
+                <th data-model="midName" class="col-md-4 col-xs-4">
+                    @Html.DisplayNameFor(model => model.midName)
+                </th>
+                <th data-model="lastName" class="col-md-4 col-xs-4">
+                    @Html.ActionLink(Html.DisplayNameFor(model => model.lastName).ToString(), "Index", new { sortOrder = ViewBag.lastNameSortParam }, new { @class = "bg-primary" })
+                </th>
+                <th data-model="enrollmentDate" class="col-md-3 col-xs-3">
+                    @Html.ActionLink(Html.DisplayNameFor(model => model.enrollmentDate).ToString(), "Index", new { sortOrder = ViewBag.dateSortParam }, new { @class = "bg-primary" })
+                </th>
+
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="bg-primary">
+                <td>Total</td>
+                <td>Total</td>
+                <td>Total</td>
+                <td>Promedio</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var idtr = "tr" + item.estudianteID;
+                <tr id="@idtr">
+                    <td>
+                        <a href="#" class="btn dropdown-toggle js-edit" data-key="@item.estudianteID"><span class="glyphicon glyphicon-edit"></span></a>
+                        <a href="#" class="btn dropdown-toggle js-delete" data-key="@item.estudianteID"><span class="glyphicon glyphicon-trash"></span></a>
+
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span class="glyphicon glyphicon-import pull-left"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    @Html.ActionLink("Ver", "Details", "Estudiante", new { href = "#", @class = "js-view", data_key = item.estudianteID })
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="#" data-key=@item.estudianteID><span class="glyphicon glyphicon-book pull-left"></span>Promover el Estudiante</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" data-key=@item.estudianteID><span class="glyphicon glyphicon-certificate pull-left"></span>Imprimir la Accion rapida</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" data-key=@item.estudianteID><span class="glyphicon glyphicon-cloud-download pull-left"></span>Opcion 3</a></li>
+                                <li class="dropdown-header">Promueve el estudiante al siguiente nivel</li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.midName)
+                       
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.lastName) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.enrollmentDate)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="panel-footer">
+        <ul class="pagination">
+
+            @for (int i = 1; i <= ViewBag.rowCount; i++)
+            {
+                if (i == ViewBag.page)
+                {
+                    <li class="active">
+                        @Html.ActionLink(i.ToString(), "Index", new { page = i })
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        @Html.ActionLink(i.ToString(), "Index", new { page = i })
+                    </li>
+                }
+            }
+
+        </ul>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModal-label">Estudiantes</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="panel02" class="panel hidden">
+    <div class="panel-heading">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Cursos Pendientes</a></li>
+            <li class=""><a data-toggle="tab" href="#menu1">Cursos Aprobados</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <h3 id="prueba01">Listado de Cursos</h3>
+                <p>Grilla a cargar por Ajax</p>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <h3>Menu 1</h3>
+                <p>Grilla a cargar por Ajax</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="/Scripts/EstudianteIndex.js"></script>
+}
+
+

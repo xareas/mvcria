@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Make";
+}
+
+<h2>Listado de Miembros de Familia</h2>
+
+@using (Html.BeginForm("MakePost", "Bind", FormMethod.Post, new { @class = "form-inline form-group-sm",@id="form1" }))
+{
+    <div id="fila">
+        <div class="form-group">
+            @Html.Label("Nombre", new { @class = "control-label col-md-3" })
+            <div class="col-md-3">
+                @Html.TextBox("nombre[0]", null, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Edad", new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.TextBox("edad[0]", null, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <a id="jsnew" class="btn btn-default">+Nuevo</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts{
+
+    <script>
+        $(function() {
+            var noFila = 0;
+
+            $('#jsnew').on('click',function(evt) {
+                evt.preventDefault();
+                var fila = $('#fila').clone(true);
+                //nombre y edad
+                var nombre = fila.find('#nombre_' + noFila + '_');
+                var edad = fila.find('#edad_' + noFila + '_');
+               
+                noFila = noFila + 1;
+                var name = 'nombre' + '_' + noFila + '_';
+                nombre.attr('id', name);
+                var name = 'nombre' + '[' + noFila + ']';
+                nombre.attr('name', name);
+
+                name = 'edad' + '_' + noFila + '_';
+                edad.attr('id', name);
+                name = 'edad' + '[' + noFila + ']';
+                edad.attr('name', name);
+                debugger;
+
+                $('#form1').append(fila);
+
+            });
+
+        });
+
+    </script>
+
+}

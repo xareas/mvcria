@@ -1,0 +1,71 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/*mi personalizacion comienza aca*/
+.panel {
+    margin-top: 2em;
+    -webkit-box-shadow: -4px 2px 4px rgba(0, 0, 0, 0.4),
+                4px 2px 4px rgba(0, 0, 0, 0.4);
+    -ms-box-shadow: -4px 2px 4px rgba(0, 0, 0, 0.4),
+                4px 2px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: -4px 2px 4px rgba(0, 0, 0, 0.4),
+                 4px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px; /* Adjusts for spacing */
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.pagination {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-toggle {
+    padding: 0.5rem;
+}
+.text-danger {
+    color: black;
+}
+
+.label {
+    font-size: 85%;
+}

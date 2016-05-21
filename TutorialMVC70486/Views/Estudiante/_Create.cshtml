@@ -1,0 +1,129 @@
+﻿@model TutorialMVC70486.Models.Estudiante
+
+@using (Html.BeginForm("Create", "Estudiante", new { id = 0 }, FormMethod.Post, new { data_KeyItem = "#tr0", id = "formnew" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.lastName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                 @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
+                 @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.midName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.midName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.midName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.enrollmentDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.enrollmentDate, new { htmlAttributes = new { @class = "form-control" ,data_picker = "datepicker" } })
+                @Html.ValidationMessageFor(model => model.enrollmentDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="/Scripts/locales/bootstrap-datepicker.es.min.js" type="text/javascript"></script>
+<script src="/Scripts/bootstrap-datepicker.js" type="text/javascript"></script>
+
+<script>
+    $(function () {
+      
+        $('[data-picker="datepicker"]').datepicker({
+            format: "dd/mm/yyyy",
+            language: "es",
+            autoclose: true
+        });
+        
+        $("#formnew").submit(function (evt) {
+
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var $form = $(this);
+            if (!$form.valid()) {
+                return false;
+            }
+
+            var request = $.post(evt.target.action, $(this).serialize(), 'json');
+
+            request.done(function (response) {
+                if (response.status === 0) {
+                    alert('hay Errores que validar');
+                    return;
+                }
+                else {
+                   //agregar el nuevo item a la grilla
+                    insertNode(response);
+                    //reparsear el DOM adjuntando los eventos
+                   // addEventsGrid(jQuery);
+                    //ocultar la ventana modal
+                    $('#myModal').modal('hide'); //ocultar la ventana modal
+                }
+            });
+
+            request.fail(function (response) {
+                alert('Hubo un problema al ejecutar el request');
+            });
+
+            request.always(function (jqxhr, textstatus, error) {
+                $('#modalBody').html('');
+            });
+
+
+        }); //fin submit
+
+        $(document).ajaxComplete(function (event, request, settings) {
+            $.validator.unobtrusive.parse(document);
+            $('#formnew').validateBootstrap();
+        });
+
+        function insertNode(data) {
+            
+            var nodo = $('tbody tr:nth-child(1)').clone(true);
+
+            //si no hay datos en la pagina es el primer registro
+            if (nodo.length===0) {
+                location.reload(true);
+            }
+
+            var keyEntity = data.estudianteID;
+            var idrow = 'tr' + keyEntity;
+
+            nodo.attr('id', idrow);
+            nodo.find('a[data-key]').attr('data-key', keyEntity);
+
+            //actualizamos los valores de la grilla
+            nodo.find("td:nth-child(2)").html(data["lastName"]);
+            nodo.find("td:nth-child(3)").html(data["midName"]);
+            nodo.find("td:nth-child(4)").html(ToJavaScriptDate(data["enrollmentDate"]));
+
+            //agregar el nuevo elemento a la grilla
+            $('tbody').append(nodo);
+
+
+        }
+        function ToJavaScriptDate(value) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        }
+
+    }); //fin jquery
+</script>

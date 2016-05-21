@@ -1,0 +1,109 @@
+﻿@model TutorialMVC70486.Models.Estudiante
+
+@using (Html.BeginForm("Edit","Estudiante", new { id = Model.estudianteID }, FormMethod.Post, new { data_KeyItem = "#tr" + Model.estudianteID, id = "formedit" }))
+{
+      @Html.AntiForgeryToken()
+      <div class="form-horizontal">
+        
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.estudianteID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.lastName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.midName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.midName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.midName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.enrollmentDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.enrollmentDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.enrollmentDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-success"/>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+       
+      $("#formedit").submit(function (evt) {
+
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                var $form = $(this);
+                if (!$form.valid()) {
+                    return false;
+                }
+
+                var row = $(this).attr('data-keyitem');
+                var request = $.post(evt.target.action, $(this).serialize(), 'json');
+
+                request.done(function(response) {
+                   if (response.status===0) {
+                        alert('hay Errores que validar');
+                        return;
+                    }
+                    else {
+                       $('#myModal').modal('hide'); //ocultar la ventana modal
+                        refreshRow(row, response);
+                    }
+                });
+
+                request.fail(function (response) {
+                    alert('Hubo un problema al ejecutar el request');
+               });
+
+               request.always(function (jqxhr,textstatus,error) {
+                   $('#modalBody').html('');
+               });
+               
+
+        }); //fin submit
+
+        $(document).ajaxComplete(function (event, request, settings) {
+            $.validator.unobtrusive.parse(document);
+            $('#formedit').validateBootstrap();
+        });
+
+        function refreshRow(row,response) {
+            var column = '';
+        
+             column = row + '>td:nth-child(2)';
+             $(column).html(response["lastName"]);
+             
+             column = row + '>td:nth-child(3)';
+             $(column).html(response["midName"]);
+
+             column = row + '>td:nth-child(4)';
+             $(column).html(ToJavaScriptDate(response["enrollmentDate"]));
+           
+        }
+
+        function ToJavaScriptDate(value) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        }
+
+    }); //fin jquery
+</script>
+

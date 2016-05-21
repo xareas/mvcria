@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Probando Ajax</h2>
+
+
+<div class="container">
+
+    @Ajax.ActionLink("clic para ver el especial", "VerMenu", null,
+        new AjaxOptions()
+        {
+            UpdateTargetId = "menudia",
+            InsertionMode = InsertionMode.Replace,
+            LoadingElementId = "ajax-loader",
+            OnBegin = "beginRequest",
+            OnComplete = "completeRequest",
+            HttpMethod = "GET",
+            
+
+        },
+        new {@class = "btn btn-primary",@id="btnsend"})
+</div>
+<div id="menudia">
+    <img id="ajax-loader" src="/Content/rolling.svg" alt="" style="display: none" />
+</div>
+
+@section scripts {
+    <script src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function beginRequest(evt) {
+            $('#btnsend').addClass('disabled');
+            alert('');
+        }
+
+        function completeRequest(evt) {
+            $('#btnsend').removeClass('disabled');
+        }
+    </script>
+}

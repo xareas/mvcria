@@ -1,0 +1,73 @@
+﻿@model TutorialMVC70486.Models.Estudiante
+<div>
+    <h4>Seguro que desea borrarlo?</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.lastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.midName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.midName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.enrollmentDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.enrollmentDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("Delete","Estudiante",new {id=Model.estudianteID},FormMethod.Post,new {data_KeyItem ="#tr"+Model.estudianteID, id="formdelete"}))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-actions no-color">
+            <div class="modal-footer">
+                <input  type="submit" value="Borrar Estudiante" class="btn btn-danger" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(function () {
+        $("#formdelete").submit(function (evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                var row = $(this).attr('data-keyitem');
+                var request = $.post(evt.target.action, $(this).serialize(), 'json');
+                
+                request.done(function(response) {
+                    if (response.status === 1) {
+                        $(row).remove();
+                    }
+                    else {
+                        console.log(response.message);
+                    }
+                });
+
+               request.fail(function(response) {
+                console.log(response.message);
+               });
+
+               request.always(function (response) {
+                        $('#myModal').modal('hide'); //ocultar la ventana modal
+              });
+
+        }); //fin submit
+    }); //fin jquery
+</script>
+
+

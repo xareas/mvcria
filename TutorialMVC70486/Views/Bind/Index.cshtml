@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Pruebas de Binding</h2>
+
+@Html.ActionLink("Nuevo Elemento","Make",null,new {@class="btn btn-primary"})
+
+<button id="btnenviar" type="button">Enviar datos</button>
+
+@section scripts
+{
+    <script>
+        var btn = document.getElementById('btnenviar');
+        btn.addEventListener('click',
+            function(evt) {
+
+                debugger;
+                var book = { Titulo: 'Titulo del libro', Costo: 200 };
+                var comicBookJSON = JSON.stringify(book);
+
+                var request = $.ajax({
+                    url: '/Bind/PostAjax',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: comicBookJSON,
+                    contentType: 'application/json; charset=utf-8'
+                }).done(function(data) {
+                    alert(data.mensaje);
+                });
+
+               
+
+            });
+
+    </script>
+
+}

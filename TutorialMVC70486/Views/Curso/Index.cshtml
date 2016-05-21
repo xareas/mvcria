@@ -1,0 +1,55 @@
+﻿@using System.Data.Entity.Core.Common
+@using Glimpse.Core.Extensibility
+@model IEnumerable<TutorialMVC70486.Models.Curso>
+
+@{
+    ViewBag.Title = "Index";
+
+    var context = ViewContext.RequestContext;
+    var rutas = RouteTable.Routes;
+    var s = this.VirtualPath;
+
+}
+
+<h2>Listado</h2>
+@Html.AttributeEncode("mensaje valido")
+
+<p>
+    @Html.ActionLink("Nuevo Curso", "Create",null,new {@class="btn btn-primary"})
+   
+    
+</p>
+<table class="table table-bordered table-hover" id="jkGrid">
+    <caption class="title">Listado de Cursos</caption>
+    <thead>
+        <tr class="bg-primary">
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.credits)
+            </th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.credits)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.cursoID }) |
+                @Html.ActionLink("Ver", "Details", new { id = item.cursoID }) |
+                @Html.ActionLink("Borrar", "Delete", new { id = item.cursoID })
+            </td>
+        </tr>
+    }
+
+</table>
+
+@Html.Partial("_Search")
+
